@@ -8,6 +8,7 @@ import com.monteiroelias.qrcode_generator.dto.QrCodeGenerateRequest;
 import com.monteiroelias.qrcode_generator.dto.QrCodeGenerateResponse;
 import com.monteiroelias.qrcode_generator.service.QrCodeGeneratorService;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,13 +22,17 @@ public class QrCodeController {
     public QrCodeController(QrCodeGeneratorService qrCodeService) {
         this.qrCodeGeneratorService = qrCodeService;
     }
-
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Hello World! O container esta funcionando corretamente.");
+    }
     @PostMapping("path")
     public ResponseEntity<QrCodeGenerateResponse> generate(@RequestBody QrCodeGenerateRequest request) {
         try {
             QrCodeGenerateResponse response = this.qrCodeGeneratorService.generateAndUploadQrCode(request.text());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.internalServerError().build();
         }
     }
